@@ -1,0 +1,35 @@
+.loading{
+    background: url("../assets/loading.gif") no-repeat center;
+    height:2.4rem;
+    width:100%;
+}
+// 撑开高度
+.hz{
+    height:0.45rem
+}
+// 小说样板
+.ls-content{
+    ul li {
+        margin:0.08rem;
+        padding: 0.02rem;
+        border-radius:0.06rem 0.06rem;
+        background:#ccc;
+        display: flex;
+        height:1.55rem;
+        img{
+            border-radius:0.06rem 0.06rem;
+            width:1rem;
+            height:1.5rem
+        }
+        .write{
+            margin-left:0.06rem;
+            display: flex;
+            flex-direction: column;
+            .about{
+            //    width:2.4rem;
+               overflow:hidden;
+               
+            }
+        }
+    }
+}
