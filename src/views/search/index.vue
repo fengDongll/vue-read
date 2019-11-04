@@ -1,120 +1,99 @@
 <template>
     <div class="search"
-          v-infinite-scroll="loadMore"
-          infinite-scroll-disabled="loading"
-          infinite-scroll-distance="0"
-         
+        v-infinite-scroll="loadMore"
+        infinite-scroll-disabled="loading"
+        infinite-scroll-distance="0"
     >
-        <Header 
-        :back-visible="false" 
-        :search-visible="true" 
-        :mineVisible="false"
-        :editVisible="false"
-        title="搜索" 
-         >
-        </Header>
-        <div class="hezi"></div>
-            <div class="ipsearch" >
-                <mt-search v-model="key"></mt-search>
-            </div>
-            <!-- <div class="btn">
-                <mt-button class="searchBtn" type="primary" 
-                @click="SearchBtn"
-                >开始搜索</mt-button>
-            </div> -->
-            <div class="ls-content">
-                <ul>
-                    <li
-                        v-for="book in books"
-                            :key="Math.random()+book._id"
-                            @click="bookinfo(book._id)"
-                    >
-                       
-                            <span><img :src="book.cover" alt=""></span>
-                            <div class="write">
-                                <span><h4>书名：{{book.title}}</h4></span>
-                                <span>类别:{{book.cat}}</span>
-                                <span>作者:{{book.author}}</span>
-                                <span class="about">简介:{{book.longIntro}}</span>
-                                <span>总字数:{{book.wordCount}}</span>
-
-                            </div>
-                       
-                    </li>
-
-                </ul>
-            </div>
-         
+         <!-- 头部 -->
+        <Header  :showtitle="false" :showsearch="true" :showsearchbtn="true" @search="search" ref="headerKey"></Header>
+        <!-- 占位 -->
+        <div class="occ"></div>
+        <!-- 热搜词 -->
+        <div class="hot_search" v-if="data.length===0">
+            <div class="title">热搜关键词</div> 
+            <div class="hot_area">
+                <span v-for="(data,index) in hotdata" :key="index" >{{data.title}}</span>  
+            </div>   
+        </div>
+        <div class="history" v-if="data.length===0">
+             <div class="title">历史搜索</div> 
+              <div class="hot_area">
+               <span v-for="(data,index) in hotdata" :key="index" >{{data.title}}</span>  
            
-           
-         
-         <BottomNav></BottomNav> 
+             </div>   
+        </div>
+        <Bookitem  
+        v-for="book in data" 
+        :key="book._id+Math.random()" 
+        :data="book"
+       
+        ></Bookitem>
+        <!-- 底部 -->
+        <Tabbar></Tabbar>
     </div>
 </template>
 
 <script>
-//引入底部导航
-import BottomNav from "@/components/bottomNav"
-//引入头部
-import Header from "@/components/header"
-//引入mint-ui toast
-import { Toast } from 'mint-ui';
+import Tabbar from "@/components/TabBar"// 引入底部
+import Header from "@/components/Header"// 引入头部
+import api from "@/axios/api"//引入api
+import { Toast } from 'mint-ui';//引入mint-ui toast
+import Bookitem from "@/views/search/bookitem"// 引入书籍样式模块
 export default {
+    name:'search',
+    components:{
+        Tabbar,Header,Bookitem
+    },
     data(){
         return{
-            books:[],
-            limit:6,
+            data:[],
+            limit:4,
             page:0,
-            key:"",
             loading:true,  //默认关闭无限滚动
-            hasMore:true    //默认有更多数据
+            hasMore:true,    //默认有更多数据
+            hotdata:[],
+            historydata:[],
+            isone:true //是不是第一次默认是第一次
         }
     },
-     watch:{
-        key(val){
-            this.books = [];//每次类型切换的时候，数组清空
-            this.page = 0;//每次类型切换的时候，页码从第一页开始
-            this.hasMore = true;//有更多数据
-            if(val==""){
-                return  false;
-            }else{
-                this.SearchBtn()
-            }
-           
-        }
+    created(){
+        //热词
+        api.HOT_ANTISTOP(15).then(res=>{
+            this.hotdata=res.data
+        })
     },
     methods:{
-        bookinfo(id){
-           this.$router.push({name:"info",params:{id}})
+         search(){
+            this.data = [];//每次类型切换的时候，数组清空
+            this.page = 0;//每次类型切换的时候，页码从第一页开始
+            this.hasMore = true;//有更多数据
+            if(this.$refs.headerKey.keys==""){
+                return  false;
+            }else{
+                this.searchAPI()
+            }
         },
         loadMore(){
-           if(!this.hasMore){ //没有更多数据
+            if(!this.hasMore){ //没有更多数据
                 Toast({
-                    message:"我是有底线的...",
+                    message:"到底了~~~",
                     position:"bottom"
                 })
                 this.loading = true;//关闭无限滚动  loadMore方法就不会进来了
                 return false;
             }
-            this.SearchBtn()
-           
+             this.searchAPI()
         },
-        SearchBtn(){
+        searchAPI(){
             let instance = Toast({
-                message:"正在加载中...",
+                message:"努力奋斗ing",
                 duration:-1,
-                iconClass: 'fa fa-cog fa-spin'
+                iconClass: 'fa iconfont icon-shuaxin fa-spin'
             });
-            let {limit,page,key} = this; 
+           
             this.loading = true;//关闭无限滚动
-            this.$http.get("/api/bookname",{
-                params:{
-                    key,
-                    limit,
-                    page
-                }
-            }).then(res=>{
-                this.books = this.books.concat(res.data.books)  
+           api.IN_NAME_BOOK(this.$refs.headerKey.keys,this.limit).then(res=>{
+                this.data = this.data.concat(res.data.books)  
                 this.loading = false;//开启无限滚动
                 instance.close();//关闭loading弹出框
                 if(res.data.books==0){
@@ -125,30 +104,52 @@ export default {
             })
            
         }
-
     },
-    components:{
-        BottomNav,Header
+    activated(){
+        //不是第一次而且 搜索数据不是空
+        if(!this.isone && this.data.length!=0){
+            this.loading = false;//继续开启无限滚动
+        }
+        
+    },
+    deactivated(){
+        this.loading = true;//关闭无限滚动
+        this.isone=false;//不是第一次了
+        
     }
 }
 </script>
 
 <style lang="scss" scoped>
-    .hezi{
-          height:0.45rem;
-    }
-    .ipsearch{
-        height:0.4rem;
-        overflow: hidden;
-        position: relative;
-    background: red
+    .title{
+        font-size:24px;
+        text-indent: 0.15rem;
+        margin-top:0.2rem;
+        color:#00bbff;
     }
   
-    .searchBtn{
-        width:100%;
-        height:0.3rem;
-        border-radius: 0.2rem 0.2rem
+    .hot_area{
+        margin-top:0.1rem;
+        span{
+            display: block;
+            float: left;
+            line-height:0.32rem;
+            font-size:16px;
+            border: 1px solid#00bbff;
+            background: #00bbff;
+            color:#fff;
+            margin:0.02rem;
+            padding:0 0.05rem;
+            border-radius: 0.12rem;
+        }
+        &:after{
+        content:".";
+        clear:both;
+        display:block;
+        height:0;
+        overflow:hidden;
+        visibility:hidden;
+        }
     }
-  
     
 </style>

@@ -1,3 +1,4 @@
 export default {
-    Bookshelf:[]
+    //存储书籍信息
+    Books:[]
 }

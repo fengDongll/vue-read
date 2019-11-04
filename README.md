@@ -1,5 +1,5 @@
 # tianjiangming
-### 地址 120.78.3.11/read
+
 ## Project setup
 ```
 yarn install
@@ -7,22 +7,12 @@ yarn install
 
 ### Compiles and hot-reloads for development
 ```
-yarn run serve
+yarn serve
 ```
 
 ### Compiles and minifies for production
 ```
-yarn run build
-```
-
-### Run your tests
-```
-yarn run test
-```
-
-### Lints and fixes files
-```
-yarn run lint
+yarn build
 ```
 
 ### Customize configuration

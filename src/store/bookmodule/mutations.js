@@ -1,6 +1,6 @@
-import {SYNC_UPDATE} from "./const"
+import {SYNC_UPDATEBOOK} from "./const"
 export default {
-    [SYNC_UPDATE](state, Bookshelf){
-        state.Bookshelf =  Bookshelf
+    [SYNC_UPDATEBOOK](state, Books){
+        state.Books =  Books
     }
 }

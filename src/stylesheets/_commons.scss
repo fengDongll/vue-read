@@ -1,35 +1,33 @@
-.loading{
-    background: url("../assets/loading.gif") no-repeat center;
-    height:2.4rem;
-    width:100%;
+//占位
+.occ{
+    height:0.5rem;
 }
-// 撑开高度
-.hz{
-    height:0.45rem
-}
-// 小说样板
-.ls-content{
-    ul li {
-        margin:0.08rem;
-        padding: 0.02rem;
-        border-radius:0.06rem 0.06rem;
-        background:#ccc;
+
+//书城页面阶段标题css
+.titlebar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    line-height: 14px;
+    margin-top:0.05rem;
+    color:#00bbff;
+    .left{
+        margin-left:0.05rem;
         display: flex;
-        height:1.55rem;
-        img{
-            border-radius:0.06rem 0.06rem;
-            width:1rem;
-            height:1.5rem
-        }
-        .write{
-            margin-left:0.06rem;
-            display: flex;
-            flex-direction: column;
-            .about{
-            //    width:2.4rem;
-               overflow:hidden;
-               
-            }
+        align-content: center;
+        justify-content: center;
+        .t_mark{
+            display: block;
+            width:0.05rem;
+            height:0.13rem;
+            background: #00bbff;
+            margin-right:0.05rem;
         }
     }
-}
+    .right{
+       
+        margin-right: 0.05rem;
+    }
+     
+ }
+

@@ -3,10 +3,11 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-import bookmodule from "./bookmodule"
+import Bookmodule from "./BookModule"
+import Catamodule from "./CataModule"
 
 export default new Vuex.Store({
-    modules:{
-      bookmodule 
-    }
+  modules:{
+    Bookmodule,Catamodule
+  }
 })

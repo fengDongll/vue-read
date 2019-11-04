@@ -1,6 +1,4 @@
 @charset "utf-8";
-/* CSS Document */
-
 body,h1,h3,h2,h4,h5,h6,p,dl,dd,ul,li,ol,td,form,input,fieldset,legend{
 	margin:0; padding:0;
 }  
@@ -13,14 +11,15 @@ body{
 	font-size:14px; 
 	font-family:"微软雅黑"; 
 	color:#666; 
-	background:$bg-color;
+	background: #fff;
+
 }
 
 * {
     box-sizing: border-box;
 }
 
-img{vertical-align:top; display:block; border:none;}
+img{ display:block; border:none;}
 
 a,input{outline:none;}
 
